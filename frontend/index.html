@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Video Summarizer - Intelligent Video Analysis</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-brain"></i>
+          <h1>AI Video Summarizer</h1>
+        </div>
+        <div class="user-info" id="userInfo">
+          <!-- User profile will be displayed here when authenticated -->
+        </div>
+      </div>
+    </header>
+
+    <!-- Authentication Forms -->
+    <div class="auth-forms" id="authForms">
+      <div class="auth-container">
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="showAuthTab('signin')">Sign In</button>
+          <button class="auth-tab" onclick="showAuthTab('signup')">Sign Up</button>
+        </div>
+        
+        <!-- Sign In Form -->
+        <div class="auth-form active" id="signinForm">
+          <h2>Welcome Back!</h2>
+          <p>Sign in to access your AI Video Summarizer</p>
+          
+          <form onsubmit="handleSignIn(event)">
+            <div class="form-group">
+              <label for="signinEmail">
+                <i class="fas fa-envelope"></i>
+                Email
+              </label>
+              <input type="email" id="signinEmail" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+              <label for="signinPassword">
+                <i class="fas fa-lock"></i>
+                Password
+              </label>
+              <input type="password" id="signinPassword" required placeholder="Enter your password">
+            </div>
+            
+            <button type="submit" class="auth-btn primary">
+              <i class="fas fa-sign-in-alt"></i>
+              Sign In
+            </button>
+          </form>
+          
+          <div class="auth-divider">
+            <span>or</span>
+          </div>
+          
+          <button onclick="handleGoogleSignIn()" class="auth-btn google">
+            <i class="fab fa-google"></i>
+            Sign in with Google
+          </button>
+          
+          <div class="auth-links">
+            <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+          </div>
+        </div>
+        
+        <!-- Sign Up Form -->
+        <div class="auth-form" id="signupForm">
+          <h2>Create Account</h2>
+          <p>Join AI Video Summarizer and start analyzing videos</p>
+          
+          <form onsubmit="handleSignUp(event)">
+            <div class="form-group">
+              <label for="signupEmail">
+                <i class="fas fa-envelope"></i>
+                Email
+              </label>
+              <input type="email" id="signupEmail" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+              <label for="signupPassword">
+                <i class="fas fa-lock"></i>
+                Password
+              </label>
+              <input type="password" id="signupPassword" required placeholder="Create a password (min 6 chars)">
+            </div>
+            
+            <div class="form-group">
+              <label for="signupConfirmPassword">
+                <i class="fas fa-lock"></i>
+                Confirm Password
+              </label>
+              <input type="password" id="signupConfirmPassword" required placeholder="Confirm your password">
+            </div>
+            
+            <button type="submit" class="auth-btn primary">
+              <i class="fas fa-user-plus"></i>
+              Create Account
+            </button>
+          </form>
+          
+          <div class="auth-divider">
+            <span>or</span>
+          </div>
+          
+          <button onclick="handleGoogleSignIn()" class="auth-btn google">
+            <i class="fab fa-google"></i>
+            Sign up with Google
+          </button>
+        </div>
+        
+        <!-- Forgot Password Form -->
+        <div class="auth-form" id="forgotPasswordForm">
+          <h2>Reset Password</h2>
+          <p>Enter your email to receive a password reset link</p>
+          
+          <form onsubmit="handleForgotPassword(event)">
+            <div class="form-group">
+              <label for="resetEmail">
+                <i class="fas fa-envelope"></i>
+                Email
+              </label>
+              <input type="email" id="resetEmail" required placeholder="Enter your email">
+            </div>
+            
+            <button type="submit" class="auth-btn primary">
+              <i class="fas fa-paper-plane"></i>
+              Send Reset Link
+            </button>
+          </form>
+          
+          <div class="auth-links">
+            <a href="#" onclick="showAuthTab('signin')">Back to Sign In</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content (Hidden until authenticated) -->
+    <main class="main-content" style="display: none;">
+      <!-- Video Upload Section -->
+      <section class="upload-section">
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-content">
+            <i class="fas fa-file-video"></i>
+            <h3>Drop your video here</h3>
+            <p>or click to browse</p>
+            <input type="file" id="fileInput" name="video" accept="video/*" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Configuration Section -->
+      <section class="config-section">
+        <div class="config-card">
+          <h2><i class="fas fa-cog"></i> Configuration</h2>
+          
+          <div class="config-grid">
+            <div class="config-item">
+              <label for="contentType">
+                <i class="fas fa-video"></i>
+                Content Type
+              </label>
+              <select id="contentType" class="modern-select">
+                <option value="lecture">🎓 Lecture</option>
+                <option value="meeting">🤝 Meeting</option>
+                <option value="news">📰 News</option>
+                <option value="presentation">📊 Presentation</option>
+                <option value="interview">🎤 Interview</option>
+              </select>
+            </div>
+
+            <div class="config-item">
+              <label for="summaryStyle">
+                <i class="fas fa-list"></i>
+                Summary Style
+              </label>
+              <select id="summaryStyle" class="modern-select">
+                <option value="concise">📝 Concise</option>
+                <option value="detailed">🔍 Detailed</option>
+                <option value="bullet">📋 Bullet Points</option>
+              </select>
+            </div>
+
+            <div class="config-item full-width">
+              <label for="languages">
+                <i class="fas fa-globe"></i>
+                Translation Language
+              </label>
+              <select id="languages" class="modern-select">
+                <option value="EN">🇺🇸 English (Original)</option>
+                <option value="HI">🇮🇳 Hindi (हिंदी) - Enhanced</option>
+                <option value="TE">🇮🇳 Telugu (తెలుగు) - Enhanced</option>
+                <option value="ES">🇪🇸 Spanish (Español) - Enhanced</option>
+                <option value="FR">🇫🇷 French (Français) - Enhanced</option>
+                <option value="DE">🇩🇪 German (Deutsch) - Enhanced</option>
+              </select>
+              <small>Enhanced accuracy for trained languages with comprehensive dictionaries</small>
+            </div>
+
+            <button id="startBtn" class="process-btn">
+              <i class="fas fa-play"></i>
+              Process Video
+            </button>
+            
+            <!-- Debug button for testing -->
+            <button id="testBtn" class="process-btn" style="margin-top: 10px; background: #f59e0b;">
+              <i class="fas fa-bug"></i>
+              Test JavaScript
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Status Section -->
+      <section class="status-section">
+        <div class="status-card">
+          <div id="status" class="status-indicator">
+            <i class="fas fa-circle"></i>
+            <span>Ready to process</span>
+          </div>
+          <div id="progress" class="progress-bar" style="display: none;">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Section -->
+      <section class="results-section">
+        <!-- Export Button -->
+        <div class="export-section">
+          <button id="exportPdfBtn" class="export-btn" style="display: none;">
+            <i class="fas fa-file-pdf"></i>
+            <span>Export to PDF</span>
+          </button>
+        </div>
+
+        <!-- Transcript -->
+        <div class="result-card">
+          <div class="result-header">
+            <div class="result-title">
+              <i class="fas fa-file-alt"></i>
+              <h3>Transcript</h3>
+            </div>
+            <button class="copy-btn" onclick="copyToClipboard('transcript')">
+              <i class="fas fa-copy"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+          <div id="transcript" class="result-content"></div>
+        </div>
+
+        <!-- Summary -->
+        <div class="result-card">
+          <div class="result-header">
+            <div class="result-title">
+              <i class="fas fa-brain"></i>
+              <h3>AI Summary</h3>
+            </div>
+            <button class="copy-btn" onclick="copyToClipboard('summary')">
+              <i class="fas fa-copy"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+          <div id="summary" class="result-content"></div>
+        </div>
+
+        <!-- Translations -->
+        <div class="result-card">
+          <div class="result-header">
+            <div class="result-title">
+              <i class="fas fa-language"></i>
+              <h3>Translations</h3>
+            </div>
+          </div>
+          <div id="translations" class="result-content"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics-compat.js"></script>
+  
+  <!-- Firebase Configuration -->
+  <script src="js/firebase-config.js"></script>
+  
+  <!-- Authentication Service -->
+  <script src="js/auth-service.js"></script>
+  
+  <!-- Main App -->
+  <script src="js/app.js"></script>
+</body>
+</html>

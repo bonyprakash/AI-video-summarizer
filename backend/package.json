@@ -1,0 +1,37 @@
+{
+  "name": "ai-video-summarizer-backend",
+  "version": "1.0.0",
+  "description": "AI-powered video summarizer with transcription, summarization, and translation capabilities",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "build": "echo 'Build completed'"
+  },
+  "keywords": [
+    "ai",
+    "video",
+    "summarizer",
+    "transcription",
+    "translation",
+    "openai",
+    "gemini",
+    "whisper",
+    "pdf-export"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@xenova/transformers": "^2.15.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "natural": "^6.10.4",
+    "puppeteer": "^21.5.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
